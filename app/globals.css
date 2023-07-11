@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth selection:bg-purple-600/40 selection:text-purple-800;
+  }
+
+  input,
+  button {
+    outline: none;
+  }
+}
+
+@layer components {
+  .bg-clip-text {
+    background-clip: text;
+    -webkit-background-clip: text;
+  }
+}
