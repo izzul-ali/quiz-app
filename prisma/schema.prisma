@@ -10,17 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Users {
-  id String @id @default(cuid())
-  name String @db.VarChar(100)
-  email String @db.VarChar(100) @unique
-  score BigInt @db.BigInt @default(0)
+  id    String @id @default(cuid())
+  name  String @db.VarChar(100)
+  email String @unique @db.VarChar(100)
+  score Int    @default(0) @db.Integer
+
+  CorrectAnsUserId CorrectAnswers[]
 }
 
 model Verification {
-  id Int @id @default(autoincrement())
-  email String @db.VarChar(100)
-  code String @db.Text @unique
+  id      Int      @id @default(autoincrement())
+  email   String   @db.VarChar(100)
+  code    String   @unique @db.Text
   expired DateTime
+}
+
+model CorrectAnswers {
+  id          Int      @id @default(autoincrement())
+  UserId      Users    @relation(fields: [userId], references: [id])
+  userId      String   @unique @db.Text
+  expired     DateTime
+  answersData Json
 }
