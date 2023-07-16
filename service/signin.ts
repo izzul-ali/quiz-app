@@ -4,10 +4,10 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { RedirectType } from 'next/dist/client/components/redirect';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { generateToken } from '~/service/jwt';
 import { User } from '~/types/user';
-import sendEmailVerification from '~/service/email';
+import { generateToken } from './jwt';
 import prisma from '~/prisma/prisma';
+import sendEmailVerification from './email';
 
 type ErrorServerResponse = { error: string };
 
@@ -69,7 +69,7 @@ export async function codeVerification(data: FormData): Promise<ErrorServerRespo
 
     const isExpied = new Date().getTime() > match.expired.getTime();
     if (isExpied) {
-      // await prisma.verification.deleteMany({ where: { email: match.email } });
+      await prisma.verification.deleteMany({ where: { email: match.email } });
       return { error: 'code verification was expired' };
     }
 
@@ -91,6 +91,13 @@ export async function codeVerification(data: FormData): Promise<ErrorServerRespo
     const token = generateToken(user.id, user.email);
 
     cookies().set('auth_key', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    cookies().set('auth_id', user.id, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { experimental_useFormStatus as useFormStatus } from 'react-dom';
 import { ImSpinner9 } from 'react-icons/im';
-import { codeVerification, signinEmail } from '~/server/signin';
+import { codeVerification, signinEmail } from '~/service/signin';
 
 export default function Signin() {
   const { pending } = useFormStatus();
