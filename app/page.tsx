@@ -5,6 +5,7 @@ import Leaderboard from './_components/Leaderboard';
 import Link from 'next/link';
 import prisma from '~/prisma/prisma';
 import SignoutBtn from './_components/SignOutBtn';
+import Faqs from './_components/Faq';
 
 export const revalidate = 0;
 
@@ -24,7 +25,7 @@ export default async function Home() {
   const userId = cookies().get('auth_id')?.value;
 
   return (
-    <main className="p-5 pb-20 min-h-screen">
+    <main className="px-5 pt-5 min-h-screen">
       <header className="md:w-[80%] mx-auto flex justify-between items-center">
         <div className="flex items-center text-xl gap-x-1">
           <GiBrain className="fill-purple-700 rotate-45" />
@@ -32,7 +33,7 @@ export default async function Home() {
         </div>
 
         <div className="flex items-center gap-x-3 text-sm">
-          <button>FAQs</button>
+          <Link href="#faqs">FAQs</Link>
           {isAuth && userId && <SignoutBtn />}
         </div>
       </header>
@@ -54,12 +55,18 @@ export default async function Home() {
         <Leaderboard leaderboard={users} />
 
         {!isAuth && (
-          <div className="mt-14">
+          <div className="mt-16">
             <h2 className="text-center text-xl font-semibold text-gray-700 mb-5">SignIn With Email</h2>
             <SigninForm />
           </div>
         )}
       </div>
+
+      <Faqs />
+
+      <footer className="mt-14  w-full md:w-3/5 mx-auto border-t border-purple-200 py-5 text-gray-400 text-xs">
+        <p>© Copyright 2023 | Izzul Ma'ali.</p>
+      </footer>
     </main>
   );
 }
