@@ -3,13 +3,16 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 const emailTransport: Transporter<SMTPTransport.SentMessageInfo> = createTransport({
   service: 'gmail',
+  port: 465,
+  host: 'smtp.gmail.com',
   auth: {
     user: process.env.AUTH_EMAIL,
     pass: process.env.AUTH_EMAIL_PASSWORD,
   },
+  secure: true,
 });
 
-export default function sendEmailVerification(email: string, code: string) {
+export default async function sendEmailVerification(email: string, code: string) {
   const mailOptions: SendMailOptions = {
     from: process.env.AUTH_EMAIL,
     to: email,
@@ -64,11 +67,15 @@ export default function sendEmailVerification(email: string, code: string) {
     `,
   };
 
-  emailTransport.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      throw err;
-    }
+  await new Promise((resolve, reject) => {
+    emailTransport.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err.message);
+        reject(err);
+      }
 
-    console.log(info.response);
+      console.log(info.response);
+      resolve(info);
+    });
   });
 }

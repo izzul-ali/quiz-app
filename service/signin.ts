@@ -41,7 +41,7 @@ export async function signinEmail(data: FormData): Promise<ErrorServerResponse |
       data: { email, code, expired: currentTime },
     });
 
-    sendEmailVerification(email, code);
+    await sendEmailVerification(email, code);
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       return { error: error.message };
