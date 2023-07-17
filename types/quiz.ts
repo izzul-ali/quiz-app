@@ -7,7 +7,20 @@ export type Quiz = {
   type: string;
 };
 
+export type QuizResultData = {
+  username: string;
+  score: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+};
+
 export type QuestionList = {
+  number: number;
   question: string;
   answer: string[];
+};
+
+export type QuizHistory = {
+  questionNumber: number;
+  answer: string;
 };
