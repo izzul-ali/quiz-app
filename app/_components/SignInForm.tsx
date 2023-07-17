@@ -35,7 +35,7 @@ export default function Signin() {
           required
           ref={emailRef}
           placeholder="Enter an email address"
-          className={`bg-gray-100 w-full px-2 py-3 rounded border border-gray-200 focus:border-purple-600 ${
+          className={`bg-transparent w-full px-2 py-3 rounded border border-gray-300 focus:border-purple-600 ${
             error && 'border-red-600'
           } transition-colors duration-200`}
         />
