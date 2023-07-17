@@ -64,13 +64,13 @@ export async function codeVerification(data: FormData): Promise<ErrorServerRespo
   try {
     const match = await prisma.verification.findUnique({ where: { code } });
     if (!match) {
-      return { error: 'code verification not found' };
+      return { error: 'OTP number not found' };
     }
 
     const isExpied = new Date().getTime() > match.expired.getTime();
     if (isExpied) {
       await prisma.verification.deleteMany({ where: { email: match.email } });
-      return { error: 'code verification was expired' };
+      return { error: 'OTP number was expired' };
     }
 
     let user: User | null = null;
