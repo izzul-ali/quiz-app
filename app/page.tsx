@@ -1,10 +1,14 @@
 import { cookies } from 'next/headers';
+import { GiBrain } from 'react-icons/gi';
 import SigninForm from '~/app/_components/SignInForm';
 import Leaderboard from './_components/Leaderboard';
 import Link from 'next/link';
 import prisma from '~/prisma/prisma';
+import SignoutBtn from './_components/SignOutBtn';
 
 export const revalidate = 0;
+
+const linkStyle = 'w-fit block mx-auto mt-5 text-sm px-5 py-1 rounded bg-purple-600 text-white';
 
 export default async function Home() {
   const users = await prisma.users.findMany({
@@ -20,9 +24,17 @@ export default async function Home() {
   const userId = cookies().get('auth_id')?.value;
 
   return (
-    <main className="p-5 pb-20 min-h-screen bg-gradient-to-bl from-purple-100 to-gray-50">
-      <header className="md:w-[80%] mx-auto">
-        <h1 className="font-bold text-xl text-gray-700">Quiz App</h1>
+    <main className="p-5 pb-20 min-h-screen">
+      <header className="md:w-[80%] mx-auto flex justify-between items-center">
+        <div className="flex items-center text-xl gap-x-1">
+          <GiBrain className="fill-purple-700 rotate-45" />
+          <h1 className="font-bold text-gray-700">Quiz App</h1>
+        </div>
+
+        <div className="flex items-center gap-x-3 text-sm">
+          <button>FAQs</button>
+          {isAuth && userId && <SignoutBtn />}
+        </div>
       </header>
 
       <div className="mt-14">
@@ -30,14 +42,11 @@ export default async function Home() {
           Answer Random Questions and Be a Winner.
         </h2>
         {isAuth && userId ? (
-          <a href="/quiz" className="w-fit block mx-auto mt-5 text-sm px-5 py-1 rounded bg-purple-600/80 text-white">
+          <a href="/quiz" className={linkStyle}>
             Solved Quiz Now
           </a>
         ) : (
-          <Link
-            href="#email"
-            className="w-fit block mx-auto mt-5 text-sm px-5 py-1 rounded bg-purple-600/80 text-white"
-          >
+          <Link href="#email" className={linkStyle}>
             Try now
           </Link>
         )}
