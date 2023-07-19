@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { AiFillGithub } from 'react-icons/ai';
 import { GiBrain } from 'react-icons/gi';
 import SigninForm from '~/app/_components/SignInForm';
 import Leaderboard from './_components/Leaderboard';
@@ -64,8 +65,14 @@ export default async function Home() {
 
       <Faqs />
 
-      <footer className="mt-14  w-full md:w-3/5 mx-auto border-t border-purple-200 py-5 text-gray-400 text-xs">
-        <p>© Copyright 2023 | Izzul Ma'ali.</p>
+      <footer className="mt-14 flex items-center justify-between w-full md:w-3/5 mx-auto border-t border-purple-200 py-5 text-gray-400 text-xs">
+        <p>
+          © Copyright 2023 <span className="font-semibold">Izzul Ma'ali</span>.
+        </p>
+
+        <Link href="https://github.com/izzul-ali/quiz-app" title="Github">
+          <AiFillGithub className="text-lg mr-1" />
+        </Link>
       </footer>
     </main>
   );
