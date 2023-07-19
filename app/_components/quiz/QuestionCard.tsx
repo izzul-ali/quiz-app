@@ -2,12 +2,13 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState, useTransition } from 'react';
 import { MdOutlineErrorOutline, MdOutlineTimer } from 'react-icons/md';
 import { QuestionList, QuizHistory, QuizResultData } from '~/types/quiz';
 import { ResponseApi } from '~/helper/response-api';
 import { useResultQuiz } from './ResultContext';
 import Layout from './Layout';
+import { ImSpinner9 } from 'react-icons/im';
 
 interface IQuizCard {
   expired: number;
@@ -20,6 +21,7 @@ export default function QuizCard({ expired, isFinished, questionsAnswers }: IQui
 
   const { setOpenResultCard, setResultData, error, setError } = useResultQuiz();
 
+  const [pending, startTransition] = useTransition();
   const [selectedQuestionNumber, setSelectedQuestionNumber] = useState<number>(0);
   const [questionList, setQuestionList] = useState<QuestionList[]>(isFinished ? questionsAnswers : []);
   const [answers, setAnswers] = useState<QuizHistory[]>([]);
@@ -130,20 +132,22 @@ export default function QuizCard({ expired, isFinished, questionsAnswers }: IQui
 
           {selectedQuestionNumber === 9 && (
             <button
-              // disabled={selectedQuestionNumber === 9}
-              onClick={async () => {
-                const resp = await handleSubmit(false);
-                if (typeof resp === 'string') {
-                  setError(resp);
-                  return;
-                }
+              disabled={pending}
+              onClick={() =>
+                startTransition(async () => {
+                  const resp = await handleSubmit(false);
+                  if (typeof resp === 'string') {
+                    setError(resp);
+                    return;
+                  }
 
-                setResultData(resp);
-                setOpenResultCard(true);
-              }}
-              className="px-6 py-2 rounded-2xl bg-purple-600 hover:shadow-md"
+                  setResultData(resp);
+                  setOpenResultCard(true);
+                })
+              }
+              className="px-4 py-2 min-w-[5rem] rounded-2xl bg-purple-600 hover:shadow-md"
             >
-              Submit
+              {pending ? <ImSpinner9 className="animate-spin mx-auto text-base fill-purple-200" /> : 'Submit'}
             </button>
           )}
         </div>
