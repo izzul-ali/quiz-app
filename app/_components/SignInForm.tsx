@@ -1,12 +1,11 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+import { useRef, useState, useTransition } from 'react';
 import { ImSpinner9 } from 'react-icons/im';
 import { codeVerification, signinEmail } from '~/service/signin';
 
 export default function Signin() {
-  const { pending } = useFormStatus();
+  const [pending, startTransition] = useTransition();
 
   const [error, setError] = useState<string>('');
   const [showInputCode, setshowInputCode] = useState<boolean>(false);
@@ -17,13 +16,15 @@ export default function Signin() {
   return (
     <form
       action={async (data) => {
-        const res = await (showInputCode ? codeVerification(data) : signinEmail(data));
-        if (res?.error) {
-          setError(res.error);
-          return;
-        }
+        startTransition(async () => {
+          const res = await (showInputCode ? codeVerification(data) : signinEmail(data));
+          if (res?.error) {
+            setError(res.error);
+            return;
+          }
 
-        setshowInputCode(true);
+          setshowInputCode(true);
+        });
       }}
       className="w-[80%] sm:w-[50%] lg:w-[30%] mx-auto text-sm text-gray-800"
     >
@@ -60,7 +61,7 @@ export default function Signin() {
 
       {error && <p className="text-xs mt-1 ml-1 text-red-600 line-clamp-1 font-light">{error}</p>}
 
-      <button type="submit" className="w-full py-3 rounded bg-purple-600 mt-2 text-white">
+      <button type="submit" disabled={pending} className="w-full py-3 rounded bg-purple-600 mt-2 text-white">
         {pending ? (
           <ImSpinner9 className="animate-spin mx-auto text-xl fill-purple-200" />
         ) : (
